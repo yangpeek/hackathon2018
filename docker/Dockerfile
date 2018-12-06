@@ -1,4 +1,4 @@
-FROM node:7.7.2-alpine
+FROM node:8
 
 #COPY package.json .
 RUN npm install --quiet
