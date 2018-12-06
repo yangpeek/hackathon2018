@@ -1,12 +1,28 @@
 {
-   "User1": {
-      "string": "haha",
-      "bool": true,
-      "int": 5
-   },
-   "User3": {
-      "string": "daadaa",
-      "bool": false,
-      "int": 4
-   }
+    "UserStore": {
+        "EnableUDReadyNotification": true,
+        "UDNotificationPort": 8081,
+        "MaxUdQueueMap": 10000,
+        "EnableAffinityQuery": true,
+        "AffinityResponseMinAge": 6,
+        "LoadFromSegmentCacheFile": false,
+        "SaveToSegmentCacheFile": false,
+        "SegmentCacheFileSaveIntervalMin": 360,
+        "SegmentCacheFile": "/apps/hackathon/var/user_segment_store.dat",
+        "MaxUsersPerShardIdCacheByExchg_10": 2500,
+        "MemSizeCapPerShardIdCacheByExchg_10": 200000,
+        "MaxUsersPerShardIdCacheByExchg_13": 2500,
+        "MemSizeCapPerShardIdCacheByExchg_13": 200000,
+        "EnableAutoRetryQueryUserData": true,
+        "RealJSONInAffinityResponse": true,
+        "WaitingTimeToAutoRetryQueryUserDataInShield": 6
+    },
+    "SdbCache": {
+        "NumShards": 900,
+        "CapacityPerShard": 8000,
+        "CacheTtlInSec": 3600,
+        "NegativeCacheTtlInSec": 3600,
+        "RefreshByUdbUpdateTime": false,
+        "NumMemoryCapPerShard": 10737418
+    }
 }
