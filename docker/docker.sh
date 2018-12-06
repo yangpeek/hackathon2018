@@ -1,8 +1,8 @@
 #!/bin/bash
 
 HELP='# Dockerized Standard Actions
-* `./script/docker.sh --create`
-* `./script/docker.sh --shell`'
+* `./docker/docker.sh --create`
+* `./docker/docker.sh --shell`'
 
 repo="hackathon2018"
 set -e
@@ -24,7 +24,7 @@ do
         #
         --create)
             echo "Rebuilding $repo image"
-            docker build -t $repo -f script/Dockerfile-dev .
+            docker build -t $repo -f docker/Dockerfile .
             ;;
         #
         # Running container with mounted working directory.
