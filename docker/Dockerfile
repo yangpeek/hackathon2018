@@ -1,7 +1,7 @@
 FROM node:7.7.2-alpine
 
-WORKDIR /src
-
-COPY package.json .
+#COPY package.json .
 RUN npm install --quiet
+
+WORKDIR /src
 
