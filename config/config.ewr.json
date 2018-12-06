@@ -1,0 +1,12 @@
+{
+   "User1": {
+      "string": "wuwu",
+      "bool": false,
+      "int": 5
+   },
+   "User2": {
+      "string": "dada",
+      "bool": true,
+      "int": 7
+   }
+}
