@@ -32,7 +32,7 @@ do
         #
         --shell)
             echo "Running $repo container image"
-            docker run -P -it -v "`pwd`:/src" $repo /bin/bash
+            docker run -p 8088:8088 -it -v "`pwd`:/src" $repo /bin/bash
             exit 0
             ;;
         *)

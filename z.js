@@ -88,6 +88,6 @@ server.on("request", function(req, res) {
     }
 });
 
-server.listen(9090, '', 30, function(info) {
-    console.log("Listening on port 9090");
+server.listen(8088, '', 30, function(info) {
+    console.log("Listening on port 8088");
 });
