@@ -1,12 +1,13 @@
 {
    "User1": {
-      "string": "haha",
-      "bool": true,
-      "int": 5
+      "name": "haha",
+      "healthyOA": true,
+      "age": 5
    },
    "User3": {
-      "string": "daadaa",
-      "bool": false,
-      "int": 4
+      "name": "daadaa",
+      "married": false,
+       "age": 4,
+       "children": 8
    }
 }
