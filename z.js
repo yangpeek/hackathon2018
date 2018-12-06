@@ -11,9 +11,11 @@ var Templates = {
         <script src="https://raw.githubusercontent.com/daffl/jquery.dform/master/dist/jquery.dform-1.1.0.js"></script>
         </head>
         <body>
+        <table border=1>
         <form>
         $0
         </form>
+        </table>
         </script>
         </body>
         </html>
@@ -31,7 +33,7 @@ function JSON_to_FORM(j) {
         var obj1 = obj0[key0];
         for (var key1 in obj1) {
             var obj2 = obj1[key1];
-            form += `<input type=string name=${key0}.${key1} value=${obj2}>\n`;
+            form += `<tr><td>${key0}.${key1}</td><td><input type=string name=${key0}.${key1} value=${obj2}></td></tr>`;
         }
     }
     return form;
