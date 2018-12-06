@@ -1,7 +1,7 @@
 FROM node:8
 
-WORKDIR /src
-
-COPY package.json .
+#COPY package.json .
 RUN npm install --quiet
+
+WORKDIR /src
 
