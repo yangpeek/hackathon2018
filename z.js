@@ -14,6 +14,7 @@ var Templates = {
         <table border=1>
         <form>
         $0
+        <input type="submit">
         </form>
         </table>
         </script>
