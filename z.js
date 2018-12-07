@@ -7,8 +7,7 @@ var Templates = {
     "edit":
     `<html>
         <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://raw.githubusercontent.com/daffl/jquery.dform/master/dist/jquery.dform-1.1.0.js"></script>
+        <link rel="stylesheet" href="hackathon.css">
         </head>
         <body>
         <form>
@@ -81,19 +80,23 @@ server.on("request", function(req, res) {
 	var content = '';
 	
         // Get the config file...
-	if (parts.pathname == '/edit') {
+	if (parts.pathname == '/edit')
+	{
             var file_to_edit = fs.readFileSync("./"+parts.query['file']);
             var form = JSON_to_FORM(file_to_edit);
             var content = Sprintf(Templates["edit"], [form])
+	}
+	else if (parts.pathname == '/save')
+	{
+	    var file_to_edit = fs.readFileSync("./"+parts.query['file']);
+	    var form = JSON_to_FORM(file_to_edit);
+	    var content = Sprintf(Templates["edit"], [form])
+	}
+	else
+	{
+	    var content = fs.readFileSync("./"+parts.pathname);
 	}
 	
-        // Get the config file...
-	if (parts.pathname == '/save') {
-            var file_to_edit = fs.readFileSync("./"+parts.query['file']);
-            var form = JSON_to_FORM(file_to_edit);
-            var content = Sprintf(Templates["edit"], [form])
-	}
-
         res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': content.length});
         res.end(content);
     }
