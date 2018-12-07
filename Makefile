@@ -1,4 +1,4 @@
-REPO="hackathon2018"
+REPO=hackathon2018
 
 define HELP=
 make <command> where command is:
@@ -37,8 +37,9 @@ stop:
 	-@docker stop $(REPO) 1>/dev/null 2>/dev/null || true
 	-@docker rm $(REPO) 1>/dev/null 2>/dev/null  || true
 
-test:	run
-	echo "Testing z.js"
-	curl -D- 'http://127.0.0.1:8088/config/config/json' | grep Submit
+test:
+	@echo "Testing z.js"
+	curl -s -D- 'http://127.0.0.1:8088/edit?file=/config/config.json'
+
 
 

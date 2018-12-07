@@ -11,12 +11,12 @@ var Templates = {
         <script src="https://raw.githubusercontent.com/daffl/jquery.dform/master/dist/jquery.dform-1.1.0.js"></script>
         </head>
         <body>
-        <table border=1>
         <form>
+        <table border=1>
         $0
-        <input type="submit">
         </form>
         </table>
+        <input type="submit" value="Save">
         </script>
         </body>
         </html>
@@ -34,7 +34,7 @@ function JSON_to_FORM(j) {
         var obj1 = obj0[key0];
         for (var key1 in obj1) {
             var obj2 = obj1[key1];
-            form += `<tr><td>${key0}.${key1}</td><td><input type=string name=${key0}.${key1} value=${obj2}></td></tr>`;
+            form += `<tr><td>${key0}.${key1}</td><td><input type=string name=${key0}.${key1} value=${obj2}></td></tr>\n`;
         }
     }
     return form;
@@ -73,15 +73,29 @@ server.on("request", function(req, res) {
 
         var parts = url.parse(req.url, true);
 
+	// debugging output to server standard out
+	console.log(parts.pathname);
+	console.log(JSON.stringify(parts.query));
+	console.log(req.content);
+	
+	var content = '';
+	
         // Get the config file...
-        var payload = fs.readFileSync("./"+parts.pathname);
-        var form = JSON_to_FORM(payload);
-        
-        // insert it into the edit tempate
-        var response = Sprintf(Templates["edit"], [form])
+	if (parts.pathname == '/edit') {
+            var file_to_edit = fs.readFileSync("./"+parts.query['file']);
+            var form = JSON_to_FORM(file_to_edit);
+            var content = Sprintf(Templates["edit"], [form])
+	}
+	
+        // Get the config file...
+	if (parts.pathname == '/save') {
+            var file_to_edit = fs.readFileSync("./"+parts.query['file']);
+            var form = JSON_to_FORM(file_to_edit);
+            var content = Sprintf(Templates["edit"], [form])
+	}
 
-        res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': response.length});
-        res.end(response);
+        res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': content.length});
+        res.end(content);
     }
     catch(ex)
     {
