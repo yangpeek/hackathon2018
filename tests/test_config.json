@@ -1,0 +1,16 @@
+{
+  "Brain": {
+    "Filed1": {
+      "global": 1,
+      "ewr": 2
+    }, 
+    "Field2": {
+      "global": 3
+    }
+  },
+  "Bidder": {
+    "Field3": {
+      "ewr": 4
+    }
+  }
+}
