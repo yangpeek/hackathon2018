@@ -7,9 +7,11 @@ var Templates = {
     "edit":
     `<html>
         <head>
-        <link rel="stylesheet" href="hackathon.css">
+        <link rel="shortcut icon" href="#" />
+        <!-- link rel="stylesheet" href="hackathon.css" -->
         </head>
         <body>
+        <script>console.log("loaded");</script>
         <form>
         <table border=1>
         $0
@@ -26,14 +28,29 @@ var Templates = {
     "menu": ``
 };
 
-function JSON_to_FORM(j) {
+function JSON_to_FORM(j)
+{
     var obj0 = JSON.parse(j);
-    var form = "";
-    for (var key0 in obj0) {
+    var form = '';
+    //var form = `<script>function toggle_tfstring(element, attribute) { element[attribute] = element[attribute] == "true" ? "false" : "true"; }; </script>`;
+    for (var key0 in obj0)
+    {
         var obj1 = obj0[key0];
-        for (var key1 in obj1) {
+        for (var key1 in obj1)
+	{
             var obj2 = obj1[key1];
-            form += `<tr><td>${key0}.${key1}</td><td><input type=string name=${key0}.${key1} value=${obj2}></td></tr>\n`;
+	    if (typeof(obj2) === 'number')
+	    {
+		form += `<tr><td>${key0}.${key1}</td><td><input type="number" name="${key0}.${key1}" value="${obj2}"></td></tr>\n`;
+	    }
+	    else if (typeof(obj2) === 'boolean') // hidden is where the post will get data from, checkbox toggles hidden's value
+	    {   form += `<tr>`;
+                form += `<input type="hidden" name="${key0}.${key1}" id="${key0}.${key1}" value="${obj2}">`;
+		var checked = obj2 ? 'checked': "";
+		form += `<td>${key0}.${key1}</td><td><input type="checkbox" value="false" ${checked} onclick='v = document.getElementById("${key0}.${key1}"); (v.value = (v.value=="true"?"false":"true"));' ></tr></tr>\n`;
+	    }
+	    else
+		form += `<tr><td>${key0}.${key1}</td><td><input type="string" name="${key0}.${key1}" value="${obj2}"></td></tr>\n`;
         }
     }
     return form;
