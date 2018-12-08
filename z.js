@@ -12,12 +12,12 @@ var Templates = {
         </head>
         <body>
         <script>console.log("loaded");</script>
-        <form>
+        <form action="/save" method="post">
         <table border=1>
         $0
-        </form>
         </table>
-        <input type="submit" value="Save">
+        <input type="submit" value="Save" onclick="submitform()">
+        </form>
         </script>
         </body>
         </html>
@@ -41,16 +41,16 @@ function JSON_to_FORM(j)
             var obj2 = obj1[key1];
 	    if (typeof(obj2) === 'number')
 	    {
-		form += `<tr><td>${key0}.${key1}</td><td><input type="number" name="${key0}.${key1}" value="${obj2}"></td></tr>\n`;
+		form += `<tr><td>${key0}.${key1}</td><td><input type="number" name="number.${key0}.${key1}" value="${obj2}"></td></tr>\n`;
 	    }
 	    else if (typeof(obj2) === 'boolean') // hidden is where the post will get data from, checkbox toggles hidden's value
 	    {   form += `<tr>`;
-                form += `<input type="hidden" name="${key0}.${key1}" id="${key0}.${key1}" value="${obj2}">`;
+                form += `<input type="hidden" name="boolean.${key0}.${key1}" id="${key0}.${key1}" value="${obj2}">`;
 		var checked = obj2 ? 'checked': "";
 		form += `<td>${key0}.${key1}</td><td><input type="checkbox" value="false" ${checked} onclick='v = document.getElementById("${key0}.${key1}"); (v.value = (v.value=="true"?"false":"true"));' ></tr></tr>\n`;
 	    }
 	    else
-		form += `<tr><td>${key0}.${key1}</td><td><input type="string" name="${key0}.${key1}" value="${obj2}"></td></tr>\n`;
+		form += `<tr><td>${key0}.${key1}</td><td><input type="string" name="string.${key0}.${key1}" value="${obj2}"></td></tr>\n`;
         }
     }
     return form;
@@ -85,14 +85,15 @@ var server = require('http').createServer();
 server.on("request", function(req, res) {
     try
     {
-        var remote = req.socket.remoteAddress+":"+req.socket.remotePort;
 
         var parts = url.parse(req.url, true);
 
 	// debugging output to server standard out
+        var event = new Date();
+        console.log(event.toString());
+
 	console.log(parts.pathname);
 	console.log(JSON.stringify(parts.query));
-	console.log(req.content);
 	
 	var content = '';
 	
@@ -105,13 +106,13 @@ server.on("request", function(req, res) {
 	}
 	else if (parts.pathname == '/save')
 	{
-	    var file_to_edit = fs.readFileSync("./"+parts.query['file']);
-	    var form = JSON_to_FORM(file_to_edit);
-	    var content = Sprintf(Templates["edit"], [form])
+            var save = require('./route/save.js');
+            var body = save.saveHandler(req,res);
+            console.log(body);
 	}
 	else
 	{
-	    var content = fs.readFileSync("./"+parts.pathname);
+	    var content = "Do NOT Support";
 	}
 	
         res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': content.length});
