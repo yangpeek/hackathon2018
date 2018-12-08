@@ -17,6 +17,7 @@ var Templates = {
         $0
         </table>
         <input type="submit" value="Save" onclick="submitform()">
+        <input type="hidden" name="file.file_path" id="file_path" value="$1">
         </form>
         </script>
         </body>
@@ -100,23 +101,26 @@ server.on("request", function(req, res) {
         // Get the config file...
 	if (parts.pathname == '/edit')
 	{
-            var file_to_edit = fs.readFileSync("./"+parts.query['file']);
+            var file_path = "./"+parts.query['file'];
+            var file_to_edit = fs.readFileSync(file_path);
             var form = JSON_to_FORM(file_to_edit);
-            var content = Sprintf(Templates["edit"], [form])
+            content = Sprintf(Templates["edit"], [form, file_path])
 	}
 	else if (parts.pathname == '/save')
 	{
             var save = require('./route/save.js');
-            var body = save.saveHandler(req,res);
-            console.log(body);
+            save.saveHandler(req, res);
+            content = "";
 	}
 	else
 	{
-	    var content = "Do NOT Support";
+	    content = "Do NOT Support";
 	}
 	
-        res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': content.length});
-        res.end(content);
+        if(content!==""){
+          res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': content.length});
+          res.end(content);
+        }
     }
     catch(ex)
     {
