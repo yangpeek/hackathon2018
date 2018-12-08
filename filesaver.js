@@ -28,7 +28,7 @@ module.exports = {
       if (file == "global") {
         full_file = file_prefix + file_ext;
       } else {
-        full_file + file_prefix + file + "." + file_ext;
+        full_file = file_prefix + file + "." + file_ext;
       }
       return full_file;
     },
@@ -39,8 +39,11 @@ module.exports = {
         var file_obj = leading_file_obj[key0];
 	console.log(full_file_name, JSON.stringify(file_obj));
         fs.writeFile(full_file_name, JSON.stringify(file_obj), function (err) {
-          if (err) throw err;
-          console.log('Replaced!');
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('Replaced!');
+          }
         });
       }
     }
