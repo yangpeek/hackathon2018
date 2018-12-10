@@ -7,16 +7,15 @@ module.exports = {
         });
         req.on('end', () => {
           let parsedQuery = this.getObjFromQuery(query);
-          let filePathOld = this.getAndRemoveFilePath(parsedQuery);
-          let filePathNew = this.newFilePath(filePathOld);
+          let fileParams = this.getAndRemoveFileParams(parsedQuery);
+          //let filePathNew = this.newFilePath(filePathOld);
           var obj = this.flattenedObjectToObj(parsedQuery);
-          this.saveObjToFile(obj, filePathNew);
-          this.sendResponse(res, filePathNew, obj);
+          this.saveObjToFile(obj, fileParams);
+          this.sendResponse(res, obj, fileParams);
         });
       }
     },
 
-    
     getObjFromQuery: function(body) {
       let querystring = require('querystring');
       let parsedQuery = querystring.parse(body);
@@ -25,10 +24,14 @@ module.exports = {
       return parsedQuery;
     },
     
-   getAndRemoveFilePath: function(parsedQuery) {
-      let filePathOld = parsedQuery["file.file_path"];
-      delete parsedQuery["file.file_path"];
-      return filePathOld;
+    getAndRemoveFileParams: function(parsedQuery) {
+      let fileDir = parsedQuery["file_dir"];
+      delete parsedQuery["file_dir"];
+      let filePrefix = parsedQuery["file_prefix"];
+      delete parsedQuery["file_prefix"];
+      let fileExt = parsedQuery["file_ext"];
+      delete parsedQuery["file_ext"];
+      return [fileDir, filePrefix, fileExt];
     },
     
     newFilePath: function(filePathOld) {
@@ -47,6 +50,7 @@ module.exports = {
         let type = arr[0];
         let settingGroupName = arr[1];
         let settingName = arr[2];
+        let settingFile = arr[3];
         let value = parsedQuery[key];
         if(!settingGroupsMap.hasOwnProperty(settingGroupName)){
           settingGroupsMap[settingGroupName] = {};
@@ -54,9 +58,11 @@ module.exports = {
         if(!settingGroupsMap[settingGroupName].hasOwnProperty(settingName)){
           settingGroupsMap[settingGroupName][settingName] = {};
         }
-
+        if(!settingGroupsMap[settingGroupName][settingName].hasOwnProperty(settingFile)){
+          settingGroupsMap[settingGroupName][settingName][settingFile] = {};
+        }
         value = this.typedValue(type, value);
-        settingGroupsMap[settingGroupName][settingName] = value;
+        settingGroupsMap[settingGroupName][settingName][settingFile] = value;
       }
       console.log("Obj: "+ JSON.stringify(settingGroupsMap));
       return settingGroupsMap;
@@ -71,11 +77,13 @@ module.exports = {
       return value;
     },
     
-    saveObjToFile: function(obj, filePathNew) {
+    saveObjToFile: function(obj, fileParams) {
+      var filesaver = require('../file_ops/filesaver/filesaver.js');
+      filesaver.extractFile(obj, fileParams[0], fileParams[1], fileParams[2]);
     },
     
-    sendResponse: function(res, filePathNew, obj) {
-      let content = "Saved to: "+filePathNew+" content:<br/>"+JSON.stringify(obj);
+    sendResponse: function(res, obj, fileParams) {
+      let content = "Saved to: " + fileParams[0] + "/" + fileParams[1] + "*" + "." + fileParams[2] + " content:<br/>" + JSON.stringify(obj);
       res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': content.length});
       res.end(content);
     }

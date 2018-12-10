@@ -1,6 +1,5 @@
 {
     "UserStore": {
-        "EnableUDReadyNotification": true,
         "UDNotificationPort": 8081,
         "MaxUdQueueMap": 10000,
         "EnableAffinityQuery": true,
