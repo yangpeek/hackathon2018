@@ -36,7 +36,7 @@ module.exports = {
         var full_file_name = this.genFileName(key0, dir, prefix, ext);
         var file_obj = leading_file_obj[key0];
 	console.log(full_file_name, JSON.stringify(file_obj));
-        fs.writeFile(full_file_name, JSON.stringify(file_obj), function (err) {
+        fs.writeFile(full_file_name, JSON.stringify(file_obj, null, 4), function (err) {
           if (err) {
             console.log(err);
           } else {
