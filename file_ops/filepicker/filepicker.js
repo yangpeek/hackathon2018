@@ -1,4 +1,49 @@
 module.exports = {
+    fileName: function(file_name) {
+        var path = require('path');
+        var array = path.basename(file_name).split('.');
+        if ( array.length < 3 ) {
+            return 'global';
+        } else {
+            return array[1];
+        }
+    },
+ 
+    findFiles: function(dir, prefix, ext) {
+        var fs = require('fs');
+        var files = fs.readdirSync(dir).filter(fn => fn.startsWith(prefix)).filter(fn => fn.endsWith("." + ext));
+        return files;
+    },
+  
+    genObject: function(ending_file_obj, file, key0, key1, obj) {
+      if (ending_file_obj[key0] === undefined) {
+        ending_file_obj[key0] = {}
+      }
+      if (ending_file_obj[key0][key1] === undefined) {
+        ending_file_obj[key0][key1] = {}
+      }
+      ending_file_obj[key0][key1][file] = obj;
+    },
+
+    pickAllFiles: function(dir, prefix, ext) {
+        var fs = require('fs');
+        files = this.findFiles(dir, prefix, ext); 
+        console.log(files);
+        var config = {};
+        for ( let file of files ) {
+            var full_file_name = dir + file;
+            console.log(full_file_name);
+            var file_level = this.fileName(full_file_name);
+            var obj = JSON.parse(fs.readFileSync(full_file_name));
+            for ( var key0 in obj ) {
+                for ( var key1 in obj[key0] ) {
+                    this.genObject(config, file_level, key0, key1, obj[key0][key1]);
+                }
+            }
+        }
+        return JSON.stringify(config);
+    },
+
     pickFile: function(node_level_config, pop_level_config, global_config) {
         var fs = require('fs');
         var node_level_obj = new Object();
@@ -14,10 +59,9 @@ module.exports = {
             global_obj = JSON.parse(fs.readFileSync(global_config));
         }
         
-        var path = require('path');
-        var node_name = path.basename(node_level_config).split('.')[1];
-        var pop_name = path.basename(pop_level_config).split('.')[1];
-        var global_name = 'global';
+        var node_name = this.fileName(node_level_config);
+        var pop_name = this.fileName(pop_level_config);
+        var global_name = this.fileName(global_config);
         var new_config = new Object();
 
         for (var key0 in node_level_obj) {

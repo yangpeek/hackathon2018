@@ -16,7 +16,6 @@ module.exports = {
       }
     },
 
-    
     getObjFromQuery: function(body) {
       let querystring = require('querystring');
       let parsedQuery = querystring.parse(body);
