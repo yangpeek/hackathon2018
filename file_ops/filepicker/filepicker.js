@@ -12,6 +12,7 @@ module.exports = {
     findFiles: function(dir, prefix, ext) {
         var fs = require('fs');
         var files = fs.readdirSync(dir).filter(fn => fn.startsWith(prefix)).filter(fn => fn.endsWith("." + ext));
+        files.reverse();
         return files;
     },
   
@@ -31,7 +32,7 @@ module.exports = {
         console.log(files);
         var config = {};
         for ( let file of files ) {
-            var full_file_name = dir + file;
+            var full_file_name = dir + "/" + file;
             console.log(full_file_name);
             var file_level = this.fileName(full_file_name);
             var obj = JSON.parse(fs.readFileSync(full_file_name));
@@ -41,7 +42,7 @@ module.exports = {
                 }
             }
         }
-        return JSON.stringify(config);
+        return config;
     },
 
     pickFile: function(node_level_config, pop_level_config, global_config) {
