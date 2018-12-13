@@ -7,8 +7,8 @@ var fs = require("fs");
 var server = require('http').createServer();
 
 server.on("request", function(req, res) {
-//    try
-//    {
+    try
+    {
 
         var parts = url.parse(req.url, true);
 
@@ -26,9 +26,18 @@ server.on("request", function(req, res) {
 	{
             var dir = parts.query['dir']; 
             var prefix = parts.query['prefix']; 
-            var ext = parts.query['ext']; 
+            var ext = parts.query['ext'];
+	    var name = parts.query['filename']
             var edit = require('./route/edit.js');
-            content = edit.editHandler(dir, prefix, ext);
+	    if (name) // I could NOT get the filepicker to work. Need to add help or something. Use actual name here:
+		content = edit.fileHandler(name);
+	    else
+		content = edit.editHandler(dir, prefix, ext);
+	}
+	else if (parts.pathname == '/file')
+	{
+            var filename = parts.query['dir']; 
+            content = edit.fileHandler(dir, prefix, ext);
 	}
 	else if (parts.pathname == '/save')
 	{
@@ -45,13 +54,13 @@ server.on("request", function(req, res) {
           res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': content.length});
           res.end(content);
         }
-//    }
-//    catch(ex)
-//    {
-//        payload = ex.toString() + "\n" + JSON.stringify(parts)+"\n";
-//        res.writeHead(400, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': payload.length});
-//        res.end(payload);
-//    }
+    }
+    catch(ex)
+    {
+        payload = ex.toString() + "\n" + JSON.stringify(parts)+"\n";
+        res.writeHead(400, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': payload.length});
+        res.end(payload);
+    }
 });
 
 server.listen(8088, '', 30, function(info) {
