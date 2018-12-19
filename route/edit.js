@@ -30,10 +30,12 @@ module.exports = {
                 if (ipt.value != ipt.defaultValue) {
                   out = out + ipt.name + " changed" + ";";
                 }
-                if (ipt.checked != ipt.defualtChecked) {
+                if (ipt.type == "checkbox") {
+                  if (ipt.checked != ipt.defaultChecked) {
+                    ipt.value = (ipt.value == "true" ? "false" : "true");
+                    out = out + ipt.name + " changed" + ";"
+                  }
                   ipt.checked = true;
-                  ipt.value = (ipt.value= "true" ? "false" : "true");
-                  out = out + ipt.name + " changed" + ";"
                 }
               }
               alert(out);
@@ -64,8 +66,7 @@ module.exports = {
           else if (typeof(obj3) === 'boolean') { // hidden is where the post will get data from, checkbox toggles hidden's value 
             var checked = obj3 ? 'checked': "";
             form += `<tr><td>${group}.${attr}.${file}</td>`;
-            //form += `    <td><input type="hidden" name="boolean.${group}.${attr}.${file}" id="${group}.${attr}.${file}" value="${obj3}">`;
-            form += `    <td><input type="checkbox" name="boolean.${group}.${attr}.${file}" value="${obj3}" ${checked} onclick='v = document.getElementById("${group}.${attr}.${file}"); (v.value = (v.value=="true"?"false":"true"));' ></td></tr>\n`;
+            form += `    <td><input type="checkbox" name="boolean.${group}.${attr}.${file}" value="${obj3}" ${checked}></td></tr>\n`;
           }
           else {
             form += `<tr><td>${group}.${attr}.${file}</td>`;
