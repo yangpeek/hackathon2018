@@ -25,17 +25,23 @@ module.exports = {
             function submitform() {
               var configTable = document.getElementById("config");
               var out = "hi: ";
-              for (var i = 0, row; row = configTable.rows[i]; i++) {
+              for (var i = configTable.rows.length-1, row; row = configTable.rows[i]; i--) {
                 var ipt = row.cells[1].firstChild;
+                var changed = false
                 if (ipt.value != ipt.defaultValue) {
-                  out = out + ipt.name + " changed" + ";";
+                  changed = true;
                 }
                 if (ipt.type == "checkbox") {
                   if (ipt.checked != ipt.defaultChecked) {
+                    changed = true;
                     ipt.value = (ipt.value == "true" ? "false" : "true");
-                    out = out + ipt.name + " changed" + ";"
                   }
                   ipt.checked = true;
+                }
+                if (changed == true) {
+                  out = out + ipt.name + " changed" + ";";
+                } else {
+                  configTable.deleteRow(i);
                 }
               }
               alert(out);
