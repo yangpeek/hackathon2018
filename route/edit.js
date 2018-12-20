@@ -12,11 +12,11 @@ module.exports = {
           <!-- link rel="stylesheet" href="hackathon.css" -->
         </head>
         <body>
-          <form action="/save" method="post">
+          <form action="/save" method="post" onsubmit="return submitform()">
             <table border=1 id="config">
               $0
             </table>
-            <input type="submit" value="Save" onclick="submitform()">
+            <input type="submit" value="Save">
             <input type="hidden" name="file_dir" id="file_dir" value="$1">
             <input type="hidden" name="file_prefix" id="file_prefix" value="$2">
             <input type="hidden" name="file_ext" id="file_ext" value="$3">
@@ -24,7 +24,7 @@ module.exports = {
           <script>
             function submitform() {
               var configTable = document.getElementById("config");
-              var out = "hi: ";
+              var out = "";
               for (var i = configTable.rows.length-1, row; row = configTable.rows[i]; i--) {
                 var ipt = row.cells[1].firstChild;
                 var changed = false
@@ -39,12 +39,16 @@ module.exports = {
                   ipt.checked = true;
                 }
                 if (changed == true) {
-                  out = out + ipt.name + " changed" + ";";
+                  out = out + ipt.name + ";";
                 } else {
                   configTable.deleteRow(i);
                 }
               }
-              alert(out);
+              var rest = confirm('Do you really want to submit the change: ' + out);
+              if (rest == false) {
+                location.reload();
+              }
+              return rest
             }
           </script>
         </body>
