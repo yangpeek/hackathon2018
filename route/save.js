@@ -78,8 +78,8 @@ module.exports = {
     },
     
     saveObjToFile: function(obj, fileParams) {
-      var filesaver = require('../file_ops/filesaver/filesaver.js');
-      filesaver.extractFile(obj, fileParams[0], fileParams[1], fileParams[2]);
+      var filemerger = require('../file_ops/filemerger/filemerger.js');
+      filemerger.mergeJsonToFiles(obj, fileParams[0], fileParams[1], fileParams[2]);
     },
     
     sendResponse: function(res, obj, fileParams) {

@@ -12,16 +12,44 @@ module.exports = {
           <!-- link rel="stylesheet" href="hackathon.css" -->
         </head>
         <body>
-          <script>console.log("loaded");</script>
-            <form action="/save" method="post">
-              <table border=1>
-                $0
-              </table>
-              <input type="submit" value="Save" onclick="submitform()">
-              <input type="hidden" name="file_dir" id="file_dir" value="$1">
-              <input type="hidden" name="file_prefix" id="file_prefix" value="$2">
-              <input type="hidden" name="file_ext" id="file_ext" value="$3">
-            </form>
+          <form action="/save" method="post" onsubmit="return submitform()">
+            <table border=1 id="config">
+              $0
+            </table>
+            <input type="submit" value="Save">
+            <input type="hidden" name="file_dir" id="file_dir" value="$1">
+            <input type="hidden" name="file_prefix" id="file_prefix" value="$2">
+            <input type="hidden" name="file_ext" id="file_ext" value="$3">
+          </form>
+          <script>
+            function submitform() {
+              var configTable = document.getElementById("config");
+              var out = "";
+              for (var i = configTable.rows.length-1, row; row = configTable.rows[i]; i--) {
+                var ipt = row.cells[1].firstChild;
+                var changed = false
+                if (ipt.value != ipt.defaultValue) {
+                  changed = true;
+                }
+                if (ipt.type == "checkbox") {
+                  if (ipt.checked != ipt.defaultChecked) {
+                    changed = true;
+                    ipt.value = (ipt.value == "true" ? "false" : "true");
+                  }
+                  ipt.checked = true;
+                }
+                if (changed == true) {
+                  out = out + ipt.name + ";";
+                } else {
+                  configTable.deleteRow(i);
+                }
+              }
+              var rest = confirm('Do you really want to submit the change: ' + out);
+              if (rest == false) {
+                location.reload();
+              }
+              return rest
+            }
           </script>
         </body>
       </html>`,
@@ -42,16 +70,18 @@ module.exports = {
         for (var file in obj2) {
           var obj3 = obj2[file];
           if (typeof(obj3) === 'number') {
-            form += `<tr><td>${group}.${attr}.${file}</td><td><input type="number" name="number.${group}.${attr}.${file}" value="${obj3}"></td></tr>\n`;
+            form += `<tr><td>${group}.${attr}.${file}</td>`;
+            form += `    <td><input type="number" name="number.${group}.${attr}.${file}" value="${obj3}"></td></tr>\n`;
           }
           else if (typeof(obj3) === 'boolean') { // hidden is where the post will get data from, checkbox toggles hidden's value 
-            form += `<tr>`;
-            form += `<input type="hidden" name="boolean.${group}.${attr}.${file}" id="${group}.${attr}.${file}" value="${obj3}">`;
             var checked = obj3 ? 'checked': "";
-            form += `<td>${group}.${attr}.${file}</td><td><input type="checkbox" value="false" ${checked} onclick='v = document.getElementById("${group}.${attr}.${file}"); (v.value = (v.value=="true"?"false":"true"));' ></tr></tr>\n`;
+            form += `<tr><td>${group}.${attr}.${file}</td>`;
+            form += `    <td><input type="checkbox" name="boolean.${group}.${attr}.${file}" value="${obj3}" ${checked}></td></tr>\n`;
           }
-          else
-            form += `<tr><td>${group}.${attr}.${file}</td><td><input type="string" name="string.${group}.${attr}.${file}" value="${obj3}"></td></tr>\n`;
+          else {
+            form += `<tr><td>${group}.${attr}.${file}</td>`;
+            form += `    <td><input type="text" name="string.${group}.${attr}.${file}" id="${group}.${attr}.${file}" value="${obj3}"></td></tr>\n`;
+          }
         }
       }
     }
