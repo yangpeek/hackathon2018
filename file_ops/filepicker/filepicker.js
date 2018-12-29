@@ -33,13 +33,18 @@ module.exports = {
         var config = {};
         for ( let file of files ) {
             var full_file_name = dir + "/" + file;
-            console.log(full_file_name);
+            console.log("pick file: " + full_file_name);
             var file_level = this.fileName(full_file_name);
-            var obj = JSON.parse(fs.readFileSync(full_file_name));
-            for ( var key0 in obj ) {
-                for ( var key1 in obj[key0] ) {
-                    this.genObject(config, file_level, key0, key1, obj[key0][key1]);
+            try {
+                var obj = JSON.parse(fs.readFileSync(full_file_name));
+                for ( var key0 in obj ) {
+                    for ( var key1 in obj[key0] ) {
+                        this.genObject(config, file_level, key0, key1, obj[key0][key1]);
+                    }
                 }
+            }
+            catch(e) {
+              console.log("file: " + full_file_name + " is invalid!");
             }
         }
         return config;

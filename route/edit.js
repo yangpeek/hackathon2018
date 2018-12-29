@@ -78,9 +78,15 @@ module.exports = {
             form += `<tr><td>${group}.${attr}.${file}</td>`;
             form += `    <td><input type="checkbox" name="boolean.${group}.${attr}.${file}" value="${obj3}" ${checked}></td></tr>\n`;
           }
+          else if (typeof(obj3) === 'string') {
+            form += `<tr><td>${group}.${attr}.${file}</td>`;
+            form += `    <td><input type="text" name="string.${group}.${attr}.${file}" id="${group}.${attr}.${file}" size="50" value="${obj3}"></td></tr>\n`;
+          } 
           else {
             form += `<tr><td>${group}.${attr}.${file}</td>`;
-            form += `    <td><input type="text" name="string.${group}.${attr}.${file}" id="${group}.${attr}.${file}" value="${obj3}"></td></tr>\n`;
+            var obj_value = JSON.stringify(obj3);
+            var obj_v = obj_value.replace(/"/g, "'");
+            form += `    <td><input type="text" name="other.${group}.${attr}.${file}" value="${obj_v}" readonly="readonly" size="100"></td></tr>\n`;
           }
         }
       }

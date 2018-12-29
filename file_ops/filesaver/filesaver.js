@@ -6,7 +6,19 @@ module.exports = {
       if (leading_file_obj[file][key0] === undefined) {
         leading_file_obj[file][key0] = {}
       }
-      leading_file_obj[file][key0][key1] = obj;
+      if (!isNaN(key1)) {
+        var intKye1 = parseInt(key1);
+        if (key1 == 0) {
+          leading_file_obj[file][key0]=[];
+        } 
+        if (key1 == leading_file_obj[file][key0].length) {
+          leading_file_obj[file][key0].push(obj);
+        } else {
+          leading_file_obj[file][key0][key1] = obj;
+        }
+      } else {
+        leading_file_obj[file][key0][key1] = obj;
+      }
     },
     extractFile: function(ending_file_obj, dir, prefix, ext) {
       var leading_file_obj = {}

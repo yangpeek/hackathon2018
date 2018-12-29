@@ -83,7 +83,7 @@ module.exports = {
     },
     
     sendResponse: function(res, obj, fileParams) {
-      let content = "Saved to: " + fileParams[0] + "/" + fileParams[1] + "*" + "." + fileParams[2] + " content:<br/>" + JSON.stringify(obj) + '<script>setTimeout(function() {window.location.href = "http://127.0.0.1:8088/edit?dir=config&prefix=config&ext=json";}, 3000);</script>;';
+      let content = "Saved to: " + fileParams[0] + "/" + fileParams[1] + "*" + "." + fileParams[2] + " content:<br/>" + JSON.stringify(obj) + '<script>setTimeout(function() {window.location.href = "http://127.0.0.1:8088/edit?dir=' + fileParams[0] + '&prefix=' + fileParams[1] + '&ext=' + fileParams[2] + '";}, 3000);</script>;';
       res.writeHead(200, {'Content-Type': 'text/html', 'Connection': 'keep-alive', 'Content-length': content.length});
       res.end(content);
     }
